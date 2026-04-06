@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Cocoon — You Are Not Broken. You Are Becoming.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+
+/* ── RESET & BASE ───────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(218, 184, 118, .18), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(102, 132, 91, .12), transparent 28%),
+    #F7F1E7;
+  color: #24180F;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CSS VARS ───────────────────────────────────────────────────────── */
+:root {
+  --orange:  #C96A35;
+  --orange2: #DD8A4B;
+  --cream:   #F7F1E7;
+  --cream2:  #EBDDCA;
+  --gold:    #B88F4A;
+  --green:   #6F8D63;
+  --green-dark: #2E4B3E;
+  --dark:    #24180F;
+  --mid:     #715B48;
+  --paper:   #FFF9EF;
+  --moss:    #4E6650;
+  --bark:    #7D5D3D;
+  --r: 16px;
+}
+
+/* ── GRAIN OVERLAY ──────────────────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  opacity: .032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px;
+}
+
+/* ── CUSTOM CURSOR ──────────────────────────────────────────────────── */
+#cursor {
+  position: fixed; z-index: 10000; pointer-events: none;
+  width: 36px; height: 36px; margin: -18px 0 0 -18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  transition: transform .15s ease;
+  will-change: transform;
+}
+#cursor.hover { transform: scale(1.6); }
+#cursor-dot {
+  position: fixed; z-index: 10000; pointer-events: none;
+  width: 6px; height: 6px; margin: -3px 0 0 -3px;
+  border-radius: 50%; background: var(--orange); opacity: .7;
+}
+
+/* ── ANIMATIONS ─────────────────────────────────────────────────────── */
+@keyframes mesh1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(60px,-40px) scale(1.1)} 66%{transform:translate(-40px,60px) scale(.95)} }
+@keyframes mesh2 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(-50px,50px) scale(1.05)} 66%{transform:translate(70px,-30px) scale(.9)} }
+@keyframes mesh3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(30px,-50px)} }
+@keyframes float  { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-16px) rotate(2deg)} }
+@keyframes floatB { 0%,100%{transform:translateY(0) rotate(3deg)} 50%{transform:translateY(-10px) rotate(-3deg)} }
+@keyframes bob    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes slideUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+@keyframes glow    { 0%,100%{box-shadow:0 0 0 0 rgba(201,106,53,.32)} 50%{box-shadow:0 0 0 18px rgba(201,106,53,0)} }
+@keyframes spinSlow { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+/* ── NAV ────────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px;
+  transition: background .4s, border-color .4s, backdrop-filter .4s;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+  background: rgba(247,241,231,.92);
+  backdrop-filter: blur(18px);
+  border-color: rgba(184,143,74,.18);
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem; font-weight: 700;
+  color: #fff; letter-spacing: -.01em;
+  transition: color .3s;
+}
+nav.scrolled .nav-logo { color: var(--dark); }
+.nav-links { display: flex; gap: 36px; }
+.nav-links a {
+  font-size: .88rem; font-weight: 600; letter-spacing: .02em;
+  color: rgba(255,255,255,.75); text-decoration: none;
+  transition: color .25s;
+}
+nav.scrolled .nav-links a { color: var(--mid); }
+.nav-links a:hover, nav.scrolled .nav-links a:hover { color: var(--orange); }
+.nav-cta {
+  background: #fff; color: var(--dark);
+  font-size: .88rem; font-weight: 800;
+  padding: 11px 24px; border-radius: 50px;
+  text-decoration: none; letter-spacing: .01em;
+  transition: background .25s, color .25s, transform .2s;
+}
+.nav-cta:hover { background: var(--orange); color: #fff; transform: scale(1.04); }
+nav.scrolled .nav-cta { background: var(--orange); color: #fff; }
+nav.scrolled .nav-cta:hover { background: var(--orange2); }
+
+/* ── HERO ────────────────────────────────────────────────────────────── */
+.hero {
+  position: relative; min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: flex-end; overflow: hidden;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(221,138,75,.22), transparent 28%),
+    radial-gradient(circle at 82% 78%, rgba(111,141,99,.25), transparent 34%),
+    linear-gradient(180deg, #1F332A 0%, #274136 48%, #314F41 100%);
+  padding: 0 0 72px;
+}
+
+/* mesh gradient orbs */
+.mesh-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(90px); opacity: .55; pointer-events: none;
+}
+.orb1 { width:700px;height:700px; background:rgba(201,106,53,.9); top:-200px; left:-160px; animation:mesh1 18s ease-in-out infinite; }
+.orb2 { width:600px;height:600px; background:rgba(111,141,99,.92); bottom:-200px; right:-100px; animation:mesh2 22s ease-in-out infinite; }
+.orb3 { width:400px;height:400px; background:rgba(184,143,74,.88); top:30%; left:40%; animation:mesh3 14s ease-in-out infinite; opacity:.32; }
+
+/* grid overlay on hero */
+.hero-grid-lines {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* floating book */
+.hero-book {
+  position: absolute; top: 50%; right: 10%;
+  transform: translateY(-54%);
+  animation: float 6s ease-in-out infinite;
+  z-index: 2;
+}
+.book3d {
+  position: relative; width: 220px; height: 280px;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+.book-face {
+  width: 220px; height: 280px;
+  background: linear-gradient(145deg, #D88B55, #A95630 58%, #8E4B2D 100%);
+  border-radius: 4px 18px 18px 4px;
+  box-shadow: -10px 10px 0 #7C4127, 0 30px 80px rgba(0,0,0,.42);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 28px 20px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.book-face::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(130deg, rgba(255,255,255,.18) 0%, transparent 55%);
+}
+.book-spine-3d {
+  position:absolute; left:-12px; top:4px; bottom:4px; width:12px;
+  background: linear-gradient(to right, #5C3425, #7A4A35);
+  border-radius: 3px 0 0 3px;
+}
+.book-icon { font-size: 3.8rem; margin-bottom: 10px; }
+.book-face-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem; font-weight: 900; color: #fff; line-height: 1.05;
+  margin-bottom: 8px;
+}
+.book-face-sub {
+  font-size: .68rem; color: rgba(255,255,255,.8);
+  font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  line-height: 1.5;
+}
+.book-face-author {
+  margin-top: auto; padding-top: 14px;
+  font-size: .8rem; color: rgba(255,255,255,.85); font-weight: 600;
+}
+.book-butterfly {
+  position:absolute; top:-24px; right:-28px;
+  font-size:2.2rem; animation:floatB 3.5s ease-in-out infinite;
+}
+.book-caterpillar {
+  position:absolute; bottom:-18px; left:-24px;
+  font-size:1.8rem; animation:bob 4s ease-in-out infinite;
+}
+
+/* hero text */
+.hero-content {
+  position: relative; z-index: 3;
+  padding: 0 48px; max-width: 1200px;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  backdrop-filter: blur(8px);
+  color: rgba(255,255,255,.9); font-size: .78rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 8px 18px; border-radius: 50px; margin-bottom: 28px;
+  animation: fadeIn .8s ease .2s both;
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(4.5rem, 10vw, 9rem);
+  font-weight: 900; line-height: .95;
+  color: #fff; letter-spacing: -.03em;
+  margin-bottom: 28px;
+  animation: slideUp .9s ease .3s both;
+}
+.hero-title .accent { color: var(--orange2); font-style: italic; }
+.hero-title .outline {
+  -webkit-text-stroke: 2px rgba(255,255,255,.4);
+  color: transparent;
+}
+.hero-sub {
+  font-size: 1.05rem; color: rgba(255,255,255,.65); line-height: 1.75;
+  max-width: 440px; margin-bottom: 40px;
+  animation: slideUp .9s ease .45s both;
+  font-weight: 500;
+}
+.hero-actions {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  animation: slideUp .9s ease .55s both;
+}
+.btn-hero {
+  background: var(--orange); color: #fff;
+  font-size: .95rem; font-weight: 800; letter-spacing: .02em;
+  padding: 16px 36px; border-radius: 50px; border: none;
+  text-decoration: none; cursor: none;
+  animation: glow 3s ease-in-out infinite;
+  transition: transform .2s, background .2s;
+}
+.btn-hero:hover { background: var(--orange2); transform: translateY(-3px); }
+.btn-hero-ghost {
+  background: rgba(255,255,255,.1); color: #fff;
+  font-size: .95rem; font-weight: 700;
+  padding: 15px 32px; border-radius: 50px;
+  border: 1.5px solid rgba(255,255,255,.3);
+  text-decoration: none; cursor: none; backdrop-filter: blur(6px);
+  transition: background .2s, border-color .2s, transform .2s;
+}
+.btn-hero-ghost:hover { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.6); transform: translateY(-3px); }
+
+/* scroll indicator */
+.hero-scroll {
+  position: absolute; bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,.4); font-size: .75rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  animation: fadeIn 1.2s ease 1s both;
+}
+.scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, rgba(255,255,255,.4), transparent);
+  animation: bob 2s ease-in-out infinite;
+}
+
+/* ── MARQUEE ─────────────────────────────────────────────────────────── */
+.marquee-wrap {
+  background: linear-gradient(90deg, #B76338 0%, #CA7743 45%, #BE8B52 100%);
+  padding: 18px 0; overflow: hidden;
+  border-top: 1px solid rgba(0,0,0,.08);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+.marquee-track {
+  display: flex; gap: 0;
+  animation: marquee 28s linear infinite;
+  width: max-content;
+}
+.marquee-item {
+  white-space: nowrap; padding: 0 32px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-weight: 700; font-style: italic;
+  color: #fff; letter-spacing: .02em;
+  display: flex; align-items: center; gap: 12px;
+}
+.marquee-sep { color: rgba(255,255,255,.5); font-style: normal; }
+
+/* ── BENTO GRID ──────────────────────────────────────────────────────── */
+.bento-section { padding: 80px 48px; max-width: 1280px; margin: 0 auto; }
+.bento-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 32px; flex-wrap: wrap; gap: 16px;
+}
+.bento-label {
+  font-size: .75rem; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--orange); margin-bottom: 10px;
+}
+.bento-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 900; line-height: 1.05; letter-spacing: -.025em;
+}
+.bento-heading em { color: var(--orange); font-style: italic; }
+.bento-sub-link {
+  color: var(--mid); font-size: .88rem; font-weight: 600;
+  text-decoration: none; border-bottom: 1.5px solid var(--gold);
+  padding-bottom: 2px; transition: color .2s;
+}
+.bento-sub-link:hover { color: var(--orange); }
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: 180px;
+  gap: 14px;
+}
+
+/* card base */
+.bc {
+  border-radius: 20px; overflow: hidden; position: relative;
+  transition: transform .3s ease, box-shadow .3s ease;
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.bc.visible { opacity: 1; transform: translateY(0); }
+.bc:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 20px 50px rgba(0,0,0,.12); }
+
+/* card placements */
+.bc-story  { grid-column: 1/7;  grid-row: 1/3; }
+.bc-stat1  { grid-column: 7/10; grid-row: 1; }
+.bc-stat2  { grid-column: 10/13;grid-row: 1; }
+.bc-chars  { grid-column: 7/13; grid-row: 2; }
+.bc-quote  { grid-column: 1/5;  grid-row: 3/5; }
+.bc-arc    { grid-column: 5/9;  grid-row: 3; }
+.bc-age    { grid-column: 9/13; grid-row: 3; }
+.bc-kip    { grid-column: 5/9;  grid-row: 4; }
+.bc-buy    { grid-column: 9/13; grid-row: 4; }
+
+/* card themes */
+.bc-cream  { background: var(--paper); border: 1.5px solid var(--cream2); }
+.bc-dark   { background: linear-gradient(145deg, #1E2A22, #2D4033); }
+.bc-orange { background: linear-gradient(145deg, #B96439, #D27E49); }
+.bc-green  { background: linear-gradient(145deg, #415D4B, #2E4B3E); }
+.bc-gold   { background: linear-gradient(145deg, #AB8448, #D0A96A); }
+.bc-soft   { background: #F1E7D9; border: 1.5px solid rgba(184,143,74,.2); }
+
+.bc-inner {
+  padding: 30px 28px; height: 100%;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.bc-inner.center { align-items: center; justify-content: center; text-align: center; }
+
+/* story card */
+.bc-story .story-tag {
+  font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--orange); margin-bottom: 14px; display: block;
+}
+.bc-story .story-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 900;
+  line-height: 1.2; letter-spacing: -.02em; margin-bottom: 14px;
+}
+.bc-story .story-body {
+  font-size: .9rem; color: var(--mid); line-height: 1.8;
+  font-weight: 500; flex: 1;
+}
+
+/* stat cards */
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.4rem; font-weight: 900; line-height: 1;
+  margin-bottom: 6px; letter-spacing: -.03em;
+}
+.stat-label {
+  font-size: .82rem; font-weight: 700; letter-spacing: .05em; opacity: .75;
+}
+
+/* chars card */
+.chars-inner {
+  padding: 24px 28px; height: 100%;
+  display: flex; align-items: center; gap: 28px;
+}
+.char-pill {
+  flex: 1; background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(6px);
+  border-radius: 16px; padding: 20px 18px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 8px; cursor: none;
+  transition: background .25s, transform .25s;
+}
+.char-pill:hover { background: rgba(255,255,255,.12); transform: translateY(-3px); }
+.char-pill-icon { font-size: 2.4rem; }
+.char-pill-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem; font-weight: 700; color: #fff;
+}
+.char-pill-role { font-size: .72rem; font-weight: 600; color: rgba(255,255,255,.5); letter-spacing: .06em; text-transform: uppercase; }
+.char-pill-desc { font-size: .78rem; color: rgba(255,255,255,.65); line-height: 1.5; }
+
+/* quote card */
+.bc-quote .q-mark {
+  font-family: 'Playfair Display', serif;
+  font-size: 7rem; line-height: .5; color: rgba(255,255,255,.12);
+  margin-bottom: 16px; display: block;
+}
+.bc-quote .q-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: 700; font-style: italic; color: #fff;
+  line-height: 1.3; flex: 1;
+}
+.bc-quote .q-attr {
+  font-size: .78rem; font-weight: 700;
+  color: rgba(255,255,255,.45); letter-spacing: .06em;
+  text-transform: uppercase; margin-top: 20px;
+}
+
+/* arc card */
+.arc-items {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.arc-item {
+  display: flex; align-items: center; gap: 10px;
+}
+.arc-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--orange); flex-shrink: 0;
+}
+.arc-text { font-size: .82rem; font-weight: 600; color: var(--mid); }
+
+/* age card */
+.age-icon { font-size: 3rem; margin-bottom: 10px; }
+.age-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem; font-weight: 900; margin-bottom: 6px;
+}
+.age-sub { font-size: .82rem; color: rgba(255,255,255,.75); font-weight: 600; }
+
+/* kip card */
+.kip-icon { font-size: 4rem; animation: bob 4s ease-in-out infinite; }
+.kip-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; font-weight: 900; margin-top: 10px;
+}
+.kip-sub { font-size: .8rem; color: var(--mid); font-weight: 600; margin-top: 4px; }
+
+/* buy card */
+.bc-buy {
+  background: var(--orange);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 28px;
+  cursor: none;
+}
+.buy-label { font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.65); margin-bottom: 10px; }
+.buy-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; font-weight: 900; color: #fff;
+  margin-bottom: 18px; line-height: 1.2;
+}
+.buy-btn {
+  background: #fff; color: var(--orange);
+  font-size: .88rem; font-weight: 800;
+  padding: 12px 26px; border-radius: 50px;
+  text-decoration: none; cursor: none; display: inline-block;
+  transition: transform .2s, box-shadow .2s;
+}
+.buy-btn:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+
+/* ── JOURNEY SECTION ─────────────────────────────────────────────────── */
+.journey-section {
+  padding: 100px 48px;
+  background: linear-gradient(180deg, #2A4238 0%, #243A31 100%);
+  position: relative; overflow: hidden;
+}
+.journey-section::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse 60% 60% at 80% 50%, rgba(201,106,53,.14), transparent),
+              radial-gradient(ellipse 50% 50% at 10% 50%, rgba(111,141,99,.16), transparent);
+  pointer-events: none;
+}
+.journey-inner { max-width: 1280px; margin: 0 auto; position: relative; }
+.journey-label {
+  font-size: .75rem; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--orange2); margin-bottom: 12px;
+}
+.journey-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem,5vw,3.8rem); font-weight: 900;
+  color: #fff; line-height: 1.1; margin-bottom: 60px;
+  letter-spacing: -.025em;
+}
+.journey-title em { color: var(--orange2); font-style: italic; }
+
+.steps-list { display: flex; flex-direction: column; gap: 0; }
+.step-row {
+  display: grid; grid-template-columns: 64px 1fr;
+  gap: 0 28px; align-items: start; padding: 28px 0;
+  border-top: 1px solid rgba(255,255,255,.08);
+  opacity: 0; transform: translateX(-20px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.step-row.visible { opacity: 1; transform: translateX(0); }
+.step-row:last-child { border-bottom: 1px solid rgba(255,255,255,.08); }
+.step-num-col {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem; font-weight: 900; color: rgba(255,255,255,.12);
+  line-height: 1;
+}
+.step-content-col { display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.step-emoji-badge {
+  font-size: 1.6rem; flex-shrink: 0; margin-top: 2px;
+}
+.step-info { flex: 1; min-width: 200px; }
+.step-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 6px;
+}
+.step-desc { font-size: .88rem; color: rgba(255,255,255,.5); line-height: 1.65; font-weight: 500; }
+.step-pages {
+  font-size: .72rem; font-weight: 800; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--orange2);
+  background: rgba(201,106,53,.12); border: 1px solid rgba(201,106,53,.24);
+  padding: 5px 14px; border-radius: 50px; align-self: flex-start; margin-top: 4px;
+}
+
+/* ── PAGE PREVIEWS ───────────────────────────────────────────────────── */
+.preview-section { padding: 100px 0 100px 48px; overflow: hidden; }
+.preview-header { max-width: 1280px; margin: 0 auto 48px; padding-right: 48px; }
+.preview-label {
+  font-size: .75rem; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--orange); margin-bottom: 10px;
+}
+.preview-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem,5vw,3.5rem); font-weight: 900;
+  line-height: 1.1; letter-spacing: -.025em;
+}
+.preview-title em { color: var(--orange); font-style: italic; }
+
+.preview-scroll {
+  display: flex; gap: 16px; overflow-x: auto;
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+  padding-right: 48px; padding-bottom: 12px;
+}
+.preview-scroll::-webkit-scrollbar { height: 3px; }
+.preview-scroll::-webkit-scrollbar-track { background: var(--cream2); }
+.preview-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+.prev-card {
+  min-width: 280px; max-width: 280px;
+  background: var(--paper); border-radius: 20px;
+  scroll-snap-align: start; flex-shrink: 0;
+  border: 1.5px solid var(--cream2);
+  overflow: hidden; cursor: none;
+  transition: transform .3s, border-color .3s;
+}
+.prev-card:hover { transform: translateY(-6px); border-color: var(--orange); }
+.prev-card-top {
+  height: 6px;
+  background: var(--orange);
+}
+.prev-card:nth-child(2) .prev-card-top { background: var(--gold); }
+.prev-card:nth-child(3) .prev-card-top { background: var(--green); }
+.prev-card:nth-child(4) .prev-card-top { background: var(--orange2); }
+.prev-card:nth-child(5) .prev-card-top { background: var(--bark); }
+.prev-card:nth-child(6) .prev-card-top { background: var(--green-dark); }
+.prev-card:nth-child(7) .prev-card-top { background: var(--orange); }
+.prev-card-body { padding: 26px 24px 28px; }
+.prev-pg { font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
+.prev-emotion {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;
+}
+.prev-emoji { font-size: 2rem; margin-bottom: 14px; display: block; }
+.prev-text {
+  font-size: .85rem; color: var(--mid); line-height: 1.75;
+  font-style: italic; font-weight: 500;
+}
+
+/* ── AUTHOR SECTION ──────────────────────────────────────────────────── */
+.author-section {
+  padding: 100px 48px;
+  background: linear-gradient(180deg, #EFE5D6 0%, #E8DCC9 100%);
+  border-top: 1px solid rgba(184,143,74,.15);
+}
+.author-inner { max-width: 1100px; margin: 0 auto; }
+.author-grid {
+  display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: center;
+}
+.author-avatar-wrap {
+  position: relative; display: flex; justify-content: center;
+}
+.author-avatar {
+  width: 280px; height: 280px;
+  background: linear-gradient(145deg, #7A976C, #3C5B4A);
+  border-radius: 36% 64% 50% 50% / 50% 50% 64% 36%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 7rem; animation: bob 6s ease-in-out infinite;
+  box-shadow: 0 24px 60px rgba(46,75,62,.3);
+}
+.author-ring {
+  position: absolute; inset: -16px;
+  border: 1.5px dashed rgba(184,143,74,.4);
+  border-radius: 50%; animation: spinSlow 30s linear infinite;
+}
+.author-label { font-size:.75rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:10px; }
+.author-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem; font-weight: 900; letter-spacing: -.03em;
+  margin-bottom: 20px; line-height: 1;
+}
+.author-bio { font-size: 1rem; color: var(--mid); line-height: 1.85; margin-bottom: 28px; font-weight: 500; }
+.author-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+.a-tag {
+  background: rgba(255,249,239,.8); border: 1.5px solid rgba(184,143,74,.3);
+  color: var(--brown, #6B5544); font-size: .8rem; font-weight: 700;
+  padding: 7px 18px; border-radius: 50px;
+  transition: border-color .2s, color .2s;
+}
+.a-tag:hover { border-color: var(--orange); color: var(--orange); }
+
+/* ── FINAL CTA ───────────────────────────────────────────────────────── */
+.final-cta {
+  background: linear-gradient(180deg, #201711 0%, #17100B 100%); padding: 130px 48px;
+  position: relative; overflow: hidden; text-align: center;
+}
+.final-cta::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(201,106,53,.16), transparent);
+  pointer-events: none;
+}
+.final-inner { position: relative; max-width: 740px; margin: 0 auto; }
+.final-bug { font-size: 3rem; display: block; margin-bottom: 24px; animation: float 5s ease-in-out infinite; }
+.final-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.8rem,7vw,5.5rem); font-weight: 900;
+  color: #fff; line-height: 1.05; letter-spacing: -.03em;
+  margin-bottom: 20px;
+}
+.final-title em { color: var(--orange2); font-style: italic; }
+.final-sub { font-size: 1.05rem; color: rgba(255,255,255,.5); margin-bottom: 48px; line-height: 1.75; font-weight: 500; }
+.final-btns { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.btn-final-main {
+  background: var(--orange); color: #fff;
+  font-size: 1rem; font-weight: 800;
+  padding: 18px 42px; border-radius: 50px;
+  text-decoration: none; cursor: none;
+  animation: glow 3s ease-in-out infinite;
+  transition: background .2s, transform .2s;
+}
+.btn-final-main:hover { background: var(--orange2); transform: translateY(-3px); }
+.btn-final-ghost {
+  background: transparent; color: rgba(255,255,255,.7);
+  font-size: 1rem; font-weight: 700;
+  padding: 17px 38px; border-radius: 50px;
+  border: 1.5px solid rgba(255,255,255,.2);
+  text-decoration: none; cursor: none;
+  transition: border-color .2s, color .2s, transform .2s;
+}
+.btn-final-ghost:hover { border-color: rgba(255,255,255,.5); color: #fff; transform: translateY(-3px); }
+.final-note { margin-top: 28px; color: rgba(255,255,255,.25); font-size: .82rem; font-weight: 600; }
+
+/* ── FOOTER ──────────────────────────────────────────────────────────── */
+footer {
+  background: #130E0A; padding: 32px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 18px;
+  border-top: 1px solid rgba(255,255,255,.05);
+}
+.f-logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--orange); }
+.f-copy { font-size: .82rem; color: rgba(255,255,255,.25); font-weight: 500; }
+.f-links { display: flex; gap: 24px; }
+.f-links a { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.3); text-decoration: none; transition: color .2s; }
+.f-links a:hover { color: var(--orange); }
+
+/* ── SCROLL REVEAL ───────────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .bento { grid-auto-rows: 160px; }
+  .bc-story { grid-column: 1/8; }
+  .bc-stat1 { grid-column: 8/11; }
+  .bc-stat2 { grid-column: 11/13; }
+  .bc-chars  { grid-column: 1/13; grid-row: 3; }
+  .bc-quote  { grid-column: 1/7; grid-row: 4/6; }
+  .bc-arc    { grid-column: 7/13; grid-row: 4; }
+  .bc-age    { grid-column: 7/10; grid-row: 5; }
+  .bc-kip    { grid-column: 10/13; grid-row: 5; }
+  .bc-buy    { grid-column: 7/13; grid-row: 6; }
+}
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero-content { padding: 0 24px; }
+  .hero-book { display: none; }
+  .bento-section, .journey-section, .author-section, .final-cta { padding-left: 24px; padding-right: 24px; }
+  .bento { display: flex; flex-direction: column; }
+  .bc { min-height: 180px; }
+  .author-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+  .author-tags { justify-content: center; }
+  .author-avatar-wrap { justify-content: center; }
+  .preview-section { padding-left: 24px; }
+  .preview-scroll { padding-right: 24px; }
+  footer { padding: 24px; }
+}
+  </style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div id="cursor">🦋</div>
+<div id="cursor-dot"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">🌱 The Cocoon</div>
+  <div class="nav-links">
+    <a href="#story">Story</a>
+    <a href="#journey">Journey</a>
+    <a href="#pages">Inside</a>
+    <a href="#author">Author</a>
+  </div>
+  <a href="#buy" class="nav-cta">Get the Book</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="mesh-orb orb1"></div>
+  <div class="mesh-orb orb2"></div>
+  <div class="mesh-orb orb3"></div>
+  <div class="hero-grid-lines"></div>
+
+  <!-- floating book -->
+  <div class="hero-book">
+    <div class="book3d">
+      <div class="book-spine-3d"></div>
+      <div class="book-face">
+        <div class="book-icon">🌱</div>
+        <div class="book-face-title">The Cocoon</div>
+        <div class="book-face-sub">You Are Not Broken<br/>You Are Becoming</div>
+        <div class="book-face-author">Kyle Hector</div>
+      </div>
+      <div class="book-butterfly">🦋</div>
+      <div class="book-caterpillar">🐛</div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-tag">🌱 A Children's Book for All Ages</div>
+    <h1 class="hero-title">
+      The<br/>
+      <span class="accent">Cocoon</span>
+    </h1>
+    <p class="hero-sub">
+      A little caterpillar named Kip discovers that the dark, uncomfortable,
+      confusing moments aren't the end. They're where you become.
+    </p>
+    <div class="hero-actions">
+      <a href="#buy" class="btn-hero">🛒 Get the Book</a>
+      <a href="#story" class="btn-hero-ghost">Read the Story</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" aria-hidden="true">
+    <!-- duplicated for seamless loop -->
+    <span class="marquee-item">🌿 Curiosity <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">🌀 Confusion <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">🌑 Isolation <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">💭 Reflection <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">🌤️ Small Hope <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">✨ Growth <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">🦋 Becoming <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">🌿 Curiosity <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">🌀 Confusion <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">🌑 Isolation <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">💭 Reflection <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">🌤️ Small Hope <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">✨ Growth <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">🦋 Becoming <span class="marquee-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- BENTO GRID -->
+<section id="story" class="bento-section">
+  <div class="bento-header reveal">
+    <div>
+      <div class="bento-label">About the Book</div>
+      <h2 class="bento-heading">A story about <em>becoming</em></h2>
+    </div>
+    <a href="#pages" class="bento-sub-link">See inside the pages →</a>
+  </div>
+
+  <div class="bento">
+
+    <!-- Story card -->
+    <div class="bc bc-story bc-cream" style="transition-delay:.05s">
+      <div class="bc-inner">
+        <span class="story-tag">The Story</span>
+        <h3 class="story-title">Kip is small, curious,<br/>and afraid of what's changing.</h3>
+        <p class="story-body">
+          When something shifts inside him, Kip doesn't understand it. He feels confused,
+          stuck, and alone inside the quiet dark of a cocoon. But with the gentle voice
+          of Bibi — a wise butterfly — he starts to learn the truth.<br/><br/>
+          <strong style="color:var(--orange)">The cocoon isn't where you get lost. It's where you become.</strong>
+        </p>
+      </div>
+    </div>
+
+    <!-- Stat: Pages -->
+    <div class="bc bc-stat1 bc-orange" style="transition-delay:.1s">
+      <div class="bc-inner center">
+        <div class="stat-num" style="color:#fff">12</div>
+        <div class="stat-label" style="color:rgba(255,255,255,.8)">Illustrated<br/>Pages</div>
+      </div>
+    </div>
+
+    <!-- Stat: Ages -->
+    <div class="bc bc-stat2 bc-soft" style="transition-delay:.15s">
+      <div class="bc-inner center">
+        <div class="stat-num" style="color:var(--dark)">5–10</div>
+        <div class="stat-label" style="color:var(--mid)">Ages &amp; up</div>
+      </div>
+    </div>
+
+    <!-- Characters card -->
+    <div class="bc bc-chars bc-green" style="transition-delay:.2s">
+      <div class="chars-inner">
+        <div class="char-pill">
+          <div class="char-pill-icon">🐛</div>
+          <div class="char-pill-name">Kip</div>
+          <div class="char-pill-role">Main Character</div>
+          <div class="char-pill-desc">Curious, emotional, and brave enough to go through the unknown.</div>
+        </div>
+        <div class="char-pill">
+          <div class="char-pill-icon">🌱</div>
+          <div class="char-pill-name">The Cocoon</div>
+          <div class="char-pill-role">The Symbol</div>
+          <div class="char-pill-desc">Dark, tight, and confusing — but where all transformation happens.</div>
+        </div>
+        <div class="char-pill">
+          <div class="char-pill-icon">🦋</div>
+          <div class="char-pill-name">Bibi</div>
+          <div class="char-pill-role">The Guide</div>
+          <div class="char-pill-desc">Warm, wise, and already through the other side. She shows the way.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote card -->
+    <div class="bc bc-quote bc-dark" style="transition-delay:.25s">
+      <div class="bc-inner" style="justify-content:flex-start;padding:36px 32px">
+        <span class="q-mark">"</span>
+        <p class="q-text">You are not broken.<br/>You are becoming.</p>
+        <div class="q-attr">— The Cocoon · Kyle Hector</div>
+      </div>
+    </div>
+
+    <!-- Arc card -->
+    <div class="bc bc-arc bc-cream" style="transition-delay:.3s">
+      <div class="bc-inner" style="justify-content:flex-start;gap:6px">
+        <span style="font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:8px;">The Arc</span>
+        <div class="arc-items">
+          <div class="arc-item"><div class="arc-dot"></div><div class="arc-text">🌿 Curiosity</div></div>
+          <div class="arc-item"><div class="arc-dot" style="background:var(--gold)"></div><div class="arc-text">🌀 Confusion &amp; Isolation</div></div>
+          <div class="arc-item"><div class="arc-dot" style="background:var(--green)"></div><div class="arc-text">💭 Doubt &amp; Remembering</div></div>
+          <div class="arc-item"><div class="arc-dot" style="background:var(--orange2)"></div><div class="arc-text">🌤️ Small Hope</div></div>
+          <div class="arc-item"><div class="arc-dot" style="background:var(--bark)"></div><div class="arc-text">✨ Inner Change</div></div>
+          <div class="arc-item"><div class="arc-dot" style="background:var(--green-dark)"></div><div class="arc-text">🦋 Becoming</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Age card -->
+    <div class="bc bc-age bc-gold" style="transition-delay:.35s">
+      <div class="bc-inner center">
+        <div class="age-icon">👨‍👩‍👧</div>
+        <div class="age-title" style="color:#fff">For Everyone</div>
+        <div class="age-sub">Kids, parents &amp; anyone going through change</div>
+      </div>
+    </div>
+
+    <!-- Kip card -->
+    <div class="bc bc-kip bc-soft" style="transition-delay:.4s">
+      <div class="bc-inner center">
+        <div class="kip-icon">🐛</div>
+        <div class="kip-title">Meet Kip</div>
+        <div class="kip-sub">Your new favourite caterpillar</div>
+      </div>
+    </div>
+
+    <!-- Buy card -->
+    <a href="#buy" class="bc bc-buy" style="transition-delay:.45s;text-decoration:none">
+      <div class="buy-label">Available Now</div>
+      <div class="buy-title">Get your copy<br/>today 📖</div>
+      <div class="buy-btn">Buy on Amazon →</div>
+    </a>
+
+  </div>
+</section>
+
+<!-- JOURNEY STEPS -->
+<section id="journey" class="journey-section">
+  <div class="journey-inner">
+    <div class="reveal">
+      <div class="journey-label">The Emotional Arc</div>
+      <h2 class="journey-title">Every page is a<br/><em>different feeling</em></h2>
+    </div>
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-num-col">01</div>
+        <div class="step-content-col">
+          <div class="step-emoji-badge">🌿</div>
+          <div class="step-info">
+            <div class="step-title">Curiosity</div>
+            <div class="step-desc">Kip explores the world with wonder. Every leaf, every branch, every corner makes him ask — what else is out there?</div>
+          </div>
+          <div class="step-pages">Page 1</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num-col">02</div>
+        <div class="step-content-col">
+          <div class="step-emoji-badge">🌀</div>
+          <div class="step-info">
+            <div class="step-title">Confusion</div>
+            <div class="step-desc">Something shifts inside Kip. Not sick. Not broken. Just different — and he doesn't know what it means yet.</div>
+          </div>
+          <div class="step-pages">Page 2</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num-col">03</div>
+        <div class="step-content-col">
+          <div class="step-emoji-badge">🦋</div>
+          <div class="step-info">
+            <div class="step-title">Meeting the Guide</div>
+            <div class="step-desc">Bibi arrives — warm, wise, already through the other side. She doesn't give all the answers. She just shows him it's possible.</div>
+          </div>
+          <div class="step-pages">Page 3</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num-col">04</div>
+        <div class="step-content-col">
+          <div class="step-emoji-badge">🌑</div>
+          <div class="step-info">
+            <div class="step-title">Isolation &amp; Doubt</div>
+            <div class="step-desc">Inside the cocoon — alone, quiet, and wondering if anything is really happening. "Did I make the right choice?"</div>
+          </div>
+          <div class="step-pages">Pages 4–7</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num-col">05</div>
+        <div class="step-content-col">
+          <div class="step-emoji-badge">💭</div>
+          <div class="step-info">
+            <div class="step-title">Remembering &amp; Hope</div>
+            <div class="step-desc">Bibi's voice returns — soft, warm, close. And light begins to grow inside the cocoon. Maybe something really is happening.</div>
+          </div>
+          <div class="step-pages">Pages 8–10</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num-col">06</div>
+        <div class="step-content-col">
+          <div class="step-emoji-badge">🦋</div>
+          <div class="step-info">
+            <div class="step-title">Becoming</div>
+            <div class="step-desc">The cocoon cracks open. Kip steps into the light — changed, free, and finally himself. The message lands: you were never broken.</div>
+          </div>
+          <div class="step-pages">Pages 11–12</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE PREVIEWS -->
+<section id="pages" class="preview-section">
+  <div class="preview-header reveal">
+    <div class="preview-label">A Peek Inside</div>
+    <h2 class="preview-title">Words that land <em>softly</em></h2>
+  </div>
+  <div class="preview-scroll">
+    <div class="prev-card">
+      <div class="prev-card-top"></div>
+      <div class="prev-card-body">
+        <span class="prev-emoji">🌿</span>
+        <div class="prev-pg">Page 1</div>
+        <div class="prev-emotion">Curiosity</div>
+        <p class="prev-text">"Kip was a small caterpillar who loved to explore. Every leaf. Every branch. Every tiny corner of the world made him wonder."</p>
+      </div>
+    </div>
+    <div class="prev-card">
+      <div class="prev-card-top"></div>
+      <div class="prev-card-body">
+        <span class="prev-emoji">🌀</span>
+        <div class="prev-pg">Page 2</div>
+        <div class="prev-emotion">Confusion</div>
+        <p class="prev-text">"But one day, something shifted. Kip felt strange. Not sick. Not broken. Just... different."</p>
+      </div>
+    </div>
+    <div class="prev-card">
+      <div class="prev-card-top"></div>
+      <div class="prev-card-body">
+        <span class="prev-emoji">🌑</span>
+        <div class="prev-pg">Page 6</div>
+        <div class="prev-emotion">Doubt</div>
+        <p class="prev-text">"Kip started to wonder... 'Did I make the right choice?' The cocoon felt smaller than before."</p>
+      </div>
+    </div>
+    <div class="prev-card">
+      <div class="prev-card-top"></div>
+      <div class="prev-card-body">
+        <span class="prev-emoji">🌧️</span>
+        <div class="prev-pg">Page 7</div>
+        <div class="prev-emotion">Heavy Thoughts</div>
+        <p class="prev-text">"Some days felt heavy. Like nothing was changing at all."</p>
+      </div>
+    </div>
+    <div class="prev-card">
+      <div class="prev-card-top"></div>
+      <div class="prev-card-body">
+        <span class="prev-emoji">💭</span>
+        <div class="prev-pg">Page 8</div>
+        <div class="prev-emotion">Remembering</div>
+        <p class="prev-text">"Then he remembered Bibi. Her voice felt close... even when she wasn't there."</p>
+      </div>
+    </div>
+    <div class="prev-card">
+      <div class="prev-card-top"></div>
+      <div class="prev-card-body">
+        <span class="prev-emoji">✨</span>
+        <div class="prev-pg">Page 10</div>
+        <div class="prev-emotion">Inner Change</div>
+        <p class="prev-text">"Inside, things were changing. Slowly. Quietly."</p>
+      </div>
+    </div>
+    <div class="prev-card">
+      <div class="prev-card-top"></div>
+      <div class="prev-card-body">
+        <span class="prev-emoji">🦋</span>
+        <div class="prev-pg">Page 12</div>
+        <div class="prev-emotion">Becoming</div>
+        <p class="prev-text">"You are not broken. You are becoming."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTHOR -->
+<section id="author" class="author-section">
+  <div class="author-inner">
+    <div class="author-grid">
+      <div class="author-avatar-wrap reveal">
+        <div class="author-ring"></div>
+        <div class="author-avatar">✍🏾</div>
+      </div>
+      <div class="reveal" style="transition-delay:.15s">
+        <div class="author-label">About the Author</div>
+        <div class="author-name">Kyle Hector</div>
+        <p class="author-bio">
+          Kyle Hector is a storyteller, digital marketer, and creative entrepreneur
+          based in Jamaica. He writes about growth, change, and becoming — not because
+          they're easy, but because they're worth telling.
+        </p>
+        <p class="author-bio">
+          The Cocoon is his first children's book. It was built on a simple belief:
+          if we give children the language for their emotions early,
+          we change who they have the chance to become.
+        </p>
+        <div class="author-tags">
+          <span class="a-tag">🇯🇲 Jamaica</span>
+          <span class="a-tag">📖 Author</span>
+          <span class="a-tag">🎨 Creative</span>
+          <span class="a-tag">🌱 Storyteller</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="buy" class="final-cta">
+  <div class="final-inner reveal">
+    <span class="final-bug">🌱</span>
+    <h2 class="final-title">Start the<br/><em>journey</em> today</h2>
+    <p class="final-sub">
+      For your child. For your classroom. For someone you love
+      who's in the middle of their own cocoon right now.
+    </p>
+    <div class="final-btns">
+      <a href="#" class="btn-final-main">🛒 Buy on Amazon</a>
+      <a href="#" class="btn-final-ghost">📱 Kindle Edition</a>
+    </div>
+    <p class="final-note">Paperback · Kindle · Ships Worldwide</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">🌱 The Cocoon</div>
+  <div class="f-copy">© 2025 Kyle Hector. All rights reserved.</div>
+  <div class="f-links">
+    <a href="#">Instagram</a>
+    <a href="#">Contact</a>
+    <a href="#buy">Buy Now</a>
+  </div>
+</footer>
+
+<script>
+  // ── CUSTOM CURSOR ──────────────────────────────────────────
+  const cursor = document.getElementById('cursor');
+  const cursorDot = document.getElementById('cursor-dot');
+  let mx = -100, my = -100, dx = -100, dy = -100;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursorDot.style.left = mx + 'px';
+    cursorDot.style.top  = my + 'px';
+  });
+
+  function animCursor() {
+    dx += (mx - dx) * 0.14;
+    dy += (my - dy) * 0.14;
+    cursor.style.left = dx + 'px';
+    cursor.style.top  = dy + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+
+  document.querySelectorAll('a, button, .char-pill, .step-card, .prev-card, .bc-buy')
+    .forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+  // ── NAV SCROLL ─────────────────────────────────────────────
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── SCROLL REVEAL ──────────────────────────────────────────
+  const revealEls = document.querySelectorAll('.reveal, .bc, .step-row');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => revealObs.observe(el));
+</script>
+</body>
+</html>
