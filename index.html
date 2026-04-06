@@ -612,11 +612,10 @@
     }
 
     .footer-card {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      justify-content: space-between;
       gap: 22px;
-      flex-wrap: wrap;
       padding: 24px 28px;
       border-radius: 28px;
       background: rgba(255, 250, 241, 0.74);
@@ -636,10 +635,25 @@
 
     .footer-links {
       display: flex;
-      gap: 18px;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
       flex-wrap: wrap;
       color: var(--muted);
       font-weight: 700;
+    }
+
+    .footer-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(58, 43, 31, 0.08);
+      font-size: 0.88rem;
+      white-space: nowrap;
     }
 
     @media (max-width: 980px) {
@@ -692,6 +706,14 @@
 
       .quote-card p {
         font-size: 1.6rem;
+      }
+
+      .footer-card {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-links {
+        justify-content: flex-start;
       }
     }
   </style>
@@ -918,9 +940,8 @@
           <div class="footer-copy">Kyle Hector</div>
         </div>
         <div class="footer-links">
-          <span>Instagram coming soon</span>
-          <span>Preview links coming soon</span>
-          <span>Custom domain live on Vercel</span>
+          <span class="footer-chip">Instagram coming soon</span>
+          <span class="footer-chip">Preview coming soon</span>
         </div>
       </div>
     </div>
