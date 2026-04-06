@@ -611,6 +611,139 @@
       padding: 40px 0 60px;
     }
 
+    .launch-popup {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: min(380px, calc(100vw - 24px));
+      z-index: 40;
+      opacity: 0;
+      transform: translateY(24px);
+      pointer-events: none;
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .launch-popup.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .launch-card {
+      position: relative;
+      overflow: hidden;
+      padding: 24px;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.2), transparent 26%),
+        linear-gradient(150deg, #fff7ea 0%, #f8e6c7 100%);
+      border: 1px solid rgba(255, 255, 255, 0.86);
+      box-shadow: 0 24px 44px rgba(73, 51, 28, 0.18);
+    }
+
+    .launch-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -48px -60px auto;
+      width: 150px;
+      height: 150px;
+      border-radius: 999px;
+      background: rgba(123, 195, 68, 0.18);
+      pointer-events: none;
+    }
+
+    .launch-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.76);
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(73, 51, 28, 0.08);
+    }
+
+    .launch-close:hover {
+      color: var(--ink);
+    }
+
+    .launch-kicker {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--orange-deep);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .launch-title {
+      font-family: "Baloo 2", cursive;
+      font-size: 2rem;
+      line-height: 0.95;
+      margin-bottom: 10px;
+      max-width: 14rem;
+    }
+
+    .launch-copy {
+      color: var(--muted);
+      font-size: 0.94rem;
+      margin-bottom: 18px;
+      max-width: 17rem;
+    }
+
+    .launch-target {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      margin-bottom: 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--leaf-deep);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .launch-countdown {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .launch-unit {
+      padding: 12px 10px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(58, 43, 31, 0.06);
+      text-align: center;
+    }
+
+    .launch-value {
+      display: block;
+      font-family: "Baloo 2", cursive;
+      font-size: 1.45rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .launch-label {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 800;
+    }
+
     .footer-card {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -706,6 +839,21 @@
 
       .quote-card p {
         font-size: 1.6rem;
+      }
+
+      .launch-popup {
+        right: 12px;
+        left: 12px;
+        bottom: 12px;
+        width: auto;
+      }
+
+      .launch-card {
+        padding: 20px;
+      }
+
+      .launch-title {
+        font-size: 1.7rem;
       }
 
       .footer-card {
@@ -946,5 +1094,105 @@
       </div>
     </div>
   </footer>
+
+  <aside class="launch-popup" id="launchPopup" aria-live="polite" aria-label="Book launch countdown">
+    <div class="launch-card">
+      <button class="launch-close" id="launchClose" type="button" aria-label="Close launch countdown">×</button>
+      <span class="launch-kicker">Launch countdown</span>
+      <h2 class="launch-title">The Cocoon launches soon.</h2>
+      <p class="launch-copy">
+        We are counting down to the book launch. Come back on May 18, 2026 to celebrate it going live.
+      </p>
+      <div class="launch-target">Launch date: May 18, 2026</div>
+      <div class="launch-countdown" id="launchCountdown">
+        <div class="launch-unit">
+          <span class="launch-value" data-unit="days">00</span>
+          <span class="launch-label">Days</span>
+        </div>
+        <div class="launch-unit">
+          <span class="launch-value" data-unit="hours">00</span>
+          <span class="launch-label">Hours</span>
+        </div>
+        <div class="launch-unit">
+          <span class="launch-value" data-unit="minutes">00</span>
+          <span class="launch-label">Minutes</span>
+        </div>
+        <div class="launch-unit">
+          <span class="launch-value" data-unit="seconds">00</span>
+          <span class="launch-label">Seconds</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    (function () {
+      const popup = document.getElementById("launchPopup");
+      const closeButton = document.getElementById("launchClose");
+      const footer = document.querySelector(".footer");
+      const storageKey = "cocoonLaunchPopupDismissed";
+      const launchDate = new Date("2026-05-18T00:00:00-05:00").getTime();
+      const values = {
+        days: document.querySelector('[data-unit="days"]'),
+        hours: document.querySelector('[data-unit="hours"]'),
+        minutes: document.querySelector('[data-unit="minutes"]'),
+        seconds: document.querySelector('[data-unit="seconds"]')
+      };
+
+      let hasReachedFooter = false;
+
+      function pad(value) {
+        return String(value).padStart(2, "0");
+      }
+
+      function updateCountdown() {
+        const now = Date.now();
+        const remaining = Math.max(launchDate - now, 0);
+
+        const days = Math.floor(remaining / 86400000);
+        const hours = Math.floor((remaining % 86400000) / 3600000);
+        const minutes = Math.floor((remaining % 3600000) / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+
+        values.days.textContent = pad(days);
+        values.hours.textContent = pad(hours);
+        values.minutes.textContent = pad(minutes);
+        values.seconds.textContent = pad(seconds);
+      }
+
+      function showPopup() {
+        if (localStorage.getItem(storageKey) === "true") {
+          return;
+        }
+
+        popup.classList.add("is-visible");
+      }
+
+      function hidePopup() {
+        popup.classList.remove("is-visible");
+        localStorage.setItem(storageKey, "true");
+      }
+
+      if (closeButton) {
+        closeButton.addEventListener("click", hidePopup);
+      }
+
+      if (footer) {
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting && !hasReachedFooter) {
+              hasReachedFooter = true;
+              showPopup();
+            }
+          });
+        }, { rootMargin: "0px 0px -120px 0px" });
+
+        observer.observe(footer);
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    })();
+  </script>
 </body>
 </html>
