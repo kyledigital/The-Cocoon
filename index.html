@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Cocoon | Kyle Hector</title>
+  <meta
+    name="description"
+    content="The Cocoon by Kyle Hector is a gentle children's story about change, feelings, growth, and hope."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    :root {
+      --bg: #f7f1e6;
+      --paper: #fffaf2;
+      --paper-strong: #f0e4cf;
+      --ink: #2f2419;
+      --muted: #6e5a46;
+      --gold: #c79744;
+      --orange: #d9783f;
+      --orange-dark: #bd5f2b;
+      --green: #6d8a62;
+      --green-dark: #405943;
+      --line: rgba(47, 36, 25, 0.1);
+      --shadow: 0 24px 60px rgba(64, 49, 31, 0.12);
+      --radius-xl: 36px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --container: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(201, 151, 68, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(109, 138, 98, 0.16), transparent 30%),
+        var(--bg);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page-shell {
+      width: min(calc(100% - 32px), var(--container));
+      margin: 0 auto;
+    }
+
+    .hero-wrap {
+      padding: 24px 0 80px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: rgba(255, 250, 242, 0.72);
+      backdrop-filter: blur(14px);
+      border-radius: 999px;
+      box-shadow: 0 10px 30px rgba(64, 49, 31, 0.06);
+      position: sticky;
+      top: 18px;
+      z-index: 10;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, #eed8a6, #d27d42);
+      color: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-card {
+      margin-top: 24px;
+      padding: 68px;
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(217, 120, 63, 0.18), transparent 24%),
+        radial-gradient(circle at 80% 78%, rgba(109, 138, 98, 0.2), transparent 28%),
+        linear-gradient(180deg, #fff9ef 0%, #f6ead7 100%);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+      background-size: 64px 64px;
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--green-dark);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Cormorant Garamond", serif;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title {
+      font-size: clamp(4rem, 10vw, 7rem);
+      margin-bottom: 18px;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.15rem, 2vw, 1.4rem);
+      color: var(--muted);
+      max-width: 40rem;
+      margin-bottom: 22px;
+    }
+
+    .hero-line {
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      color: var(--green-dark);
+      margin-bottom: 30px;
+      max-width: 34rem;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 0 24px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary {
+      background: var(--orange);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(217, 120, 63, 0.22);
+    }
+
+    .button-primary:hover {
+      background: var(--orange-dark);
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.7);
+      border-color: rgba(47, 36, 25, 0.08);
+      color: var(--ink);
+    }
+
+    .hero-aside {
+      padding: 26px;
+      background: rgba(255, 250, 242, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      border-radius: 30px;
+      box-shadow: 0 14px 32px rgba(64, 49, 31, 0.08);
+    }
+
+    .book-plate {
+      min-height: 420px;
+      border-radius: 28px;
+      padding: 28px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 250, 242, 0.26), transparent 22%),
+        linear-gradient(160deg, #6e8a63 0%, #4b684e 45%, #385244 100%);
+      color: #fff8f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .book-plate::before,
+    .book-plate::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      opacity: 0.25;
+    }
+
+    .book-plate::before {
+      width: 220px;
+      height: 220px;
+      background: rgba(217, 120, 63, 0.55);
+      top: -70px;
+      right: -50px;
+    }
+
+    .book-plate::after {
+      width: 170px;
+      height: 170px;
+      background: rgba(201, 151, 68, 0.45);
+      bottom: -50px;
+      left: -35px;
+    }
+
+    .book-stage {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      padding: 12px 0 30px;
+    }
+
+    .book-mock {
+      width: min(100%, 250px);
+      aspect-ratio: 5 / 7;
+      border-radius: 22px 24px 24px 18px;
+      padding: 24px;
+      background: linear-gradient(165deg, #dd9158 0%, #ca7040 55%, #aa5429 100%);
+      box-shadow:
+        -12px 14px 0 #824322,
+        0 22px 46px rgba(17, 11, 7, 0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .book-kicker {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.85;
+    }
+
+    .book-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 0.95;
+    }
+
+    .book-tagline {
+      font-size: 0.95rem;
+      line-height: 1.45;
+      opacity: 0.92;
+    }
+
+    .book-author {
+      font-size: 0.95rem;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    .section {
+      padding: 32px 0 0;
+    }
+
+    .section-card {
+      padding: 36px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 250, 242, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      box-shadow: 0 14px 34px rgba(64, 49, 31, 0.06);
+    }
+
+    .section-heading {
+      font-size: clamp(2.4rem, 5vw, 3.4rem);
+      margin-bottom: 14px;
+    }
+
+    .section-copy {
+      max-width: 48rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .theme-card {
+      padding: 26px 22px;
+      border-radius: var(--radius-md);
+      background: var(--paper);
+      border: 1px solid rgba(47, 36, 25, 0.08);
+    }
+
+    .theme-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .theme-card:nth-child(1) .theme-icon { background: var(--orange); }
+    .theme-card:nth-child(2) .theme-icon { background: var(--gold); }
+    .theme-card:nth-child(3) .theme-icon { background: var(--green); }
+    .theme-card:nth-child(4) .theme-icon { background: var(--green-dark); }
+
+    .theme-title {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .theme-copy {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .author-note {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+      margin-top: 24px;
+    }
+
+    .author-badge {
+      width: 120px;
+      height: 120px;
+      border-radius: 28px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, #eed8a6, #d9783f);
+      color: #fff;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      box-shadow: 0 16px 32px rgba(201, 151, 68, 0.18);
+    }
+
+    .author-name {
+      font-size: 2.4rem;
+      margin-bottom: 12px;
+    }
+
+    .author-copy {
+      color: var(--muted);
+      font-size: 1.02rem;
+      max-width: 42rem;
+    }
+
+    .footer {
+      padding: 48px 0 60px;
+      color: var(--muted);
+    }
+
+    .footer-box {
+      padding: 24px 28px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-title {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 920px) {
+      .hero-card {
+        padding: 28px;
+      }
+
+      .hero-grid,
+      .split-grid,
+      .author-note,
+      .theme-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        border-radius: 26px;
+        padding: 18px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .book-plate {
+        min-height: 360px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-wrap {
+        padding-top: 16px;
+      }
+
+      .hero-card,
+      .section-card {
+        padding: 24px;
+      }
+
+      .hero-title {
+        font-size: 3.5rem;
+      }
+
+      .hero-line {
+        font-size: 1.5rem;
+      }
+
+      .author-badge {
+        width: 96px;
+        height: 96px;
+      }
+
+      .author-note {
+        gap: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero-wrap">
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="/">
+          <span class="brand-mark">C</span>
+          <span>The Cocoon</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#about">About</a>
+          <a href="#themes">Themes</a>
+          <a href="#author">Author</a>
+        </nav>
+      </header>
+
+      <main class="hero-card">
+        <div class="hero-grid">
+          <section>
+            <div class="eyebrow">A children's book by Kyle Hector</div>
+            <h1 class="hero-title">The Cocoon</h1>
+            <p class="hero-subtitle">A gentle story about change, feelings, and becoming.</p>
+            <p class="hero-line">You are not broken. You are becoming.</p>
+            <div class="cta-row">
+              <a class="button button-primary" href="#about">Read the Story</a>
+              <a class="button button-secondary" href="#themes">Preview the Book</a>
+            </div>
+          </section>
+
+          <aside class="hero-aside" aria-label="Book highlight">
+            <div class="book-plate">
+              <div class="book-stage">
+                <div class="book-mock">
+                  <div class="book-kicker">A story for all ages</div>
+                  <div class="book-title">The Cocoon</div>
+                  <div class="book-tagline">A quiet, hopeful reminder that change can feel strange and still be beautiful.</div>
+                  <div class="book-author">Kyle Hector</div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <section class="section" id="about">
+    <div class="page-shell">
+      <div class="split-grid">
+        <article class="section-card">
+          <h2 class="section-heading">A small story with a big heart</h2>
+          <p class="section-copy">
+            Kip the caterpillar begins to feel different. He enters the cocoon unsure of what is
+            happening, and in the quiet of that strange new space he learns something gentle and
+            true: change does not always feel loud or clear. Sometimes it feels still, confusing,
+            and beautiful at the same time.
+          </p>
+        </article>
+
+        <article class="section-card">
+          <h2 class="section-heading">Made for tender moments</h2>
+          <p class="section-copy">
+            The Cocoon is designed to be simple enough for a child to understand and meaningful
+            enough for a parent, teacher, or grown reader to hold onto long after the page is
+            turned.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="themes">
+    <div class="page-shell">
+      <div class="section-card">
+        <h2 class="section-heading">Core themes</h2>
+        <p class="section-copy">The heart of the story rests on four gentle ideas children can carry with them.</p>
+
+        <div class="theme-grid">
+          <article class="theme-card">
+            <div class="theme-icon">1</div>
+            <h3 class="theme-title">Change</h3>
+            <p class="theme-copy">Growing can feel unfamiliar, but that does not mean something is wrong.</p>
+          </article>
+
+          <article class="theme-card">
+            <div class="theme-icon">2</div>
+            <h3 class="theme-title">Feelings</h3>
+            <p class="theme-copy">Quiet feelings, confused feelings, and tender feelings all deserve room.</p>
+          </article>
+
+          <article class="theme-card">
+            <div class="theme-icon">3</div>
+            <h3 class="theme-title">Growth</h3>
+            <p class="theme-copy">Transformation often happens slowly, softly, and from the inside out.</p>
+          </article>
+
+          <article class="theme-card">
+            <div class="theme-icon">4</div>
+            <h3 class="theme-title">Hope</h3>
+            <p class="theme-copy">Even when the path feels unclear, there is beauty waiting on the other side.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="author">
+    <div class="page-shell">
+      <div class="section-card">
+        <div class="author-note">
+          <div class="author-badge">KH</div>
+          <div>
+            <h2 class="author-name">Kyle Hector</h2>
+            <p class="author-copy">
+              The Cocoon was inspired by a quiet moment and the simple beauty of transformation.
+              It is a warm reminder for children and adults alike that becoming can feel slow,
+              tender, and uncertain, and still be full of grace.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="page-shell">
+      <div class="footer-box">
+        <div>
+          <div class="footer-title">The Cocoon</div>
+          <div>Kyle Hector</div>
+        </div>
+        <div class="footer-links">
+          <span>Instagram coming soon</span>
+          <span>Book preview coming soon</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
